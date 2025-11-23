@@ -1,0 +1,810 @@
+openapi: 3.0.0
+info:
+  title: fitlife API
+  description: API REST completa con autenticación JWT y CRUD de entidades
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3003/api
+    description: Servidor de desarrollo
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@sistema.com
+        password:
+          type: string
+          example: Admin123456
+
+    RegisterRequest:
+      type: object
+      required:
+        - nombre
+        - email
+        - password
+        - role
+      properties:
+        nombre:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        nombre:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        createdAt:
+          type: string
+
+    EntityBase:
+      type: object
+      properties:
+        _id:
+          type: string
+        nombre:
+          type: string
+        descripcion:
+          type: string
+        imagen:
+          type: string
+        imagenThumbnail:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Autenticación
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login exitoso
+        '401':
+          description: Credenciales inválidas
+
+  /auth/register:
+    post:
+      tags:
+        - Autenticación
+      summary: Registrar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Usuario registrado
+        '409':
+          description: Email ya existe
+
+  /auth/profile:
+    get:
+      tags:
+        - Autenticación
+      summary: Obtener perfil
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Perfil obtenido
+
+  /auth/users:
+    get:
+      tags:
+        - Autenticación
+      summary: Listar usuarios (Admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de usuarios
+
+  /upload/image:
+    post:
+      tags:
+        - Upload
+      summary: Subir imagen
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagen subida
+
+  /usuario:
+    get:
+      tags:
+        - Usuario
+      summary: Listar todos los Usuarios
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de Usuarios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityBase'
+    post:
+      tags:
+        - Usuario
+      summary: Crear Usuario
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '201':
+          description: Usuario creado
+
+  /usuario/{id}:
+    get:
+      tags:
+        - Usuario
+      summary: Obtener Usuario por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+        '404':
+          description: Usuario no encontrado
+    patch:
+      tags:
+        - Usuario
+      summary: Actualizar Usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '200':
+          description: Usuario actualizado
+    delete:
+      tags:
+        - Usuario
+      summary: Eliminar Usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario eliminado
+
+  /usuario/{id}/upload-image:
+    post:
+      tags:
+        - Usuario
+      summary: Subir imagen a Usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagen subida
+
+  /entrenador:
+    get:
+      tags:
+        - Entrenador
+      summary: Listar todos los Entrenadors
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de Entrenadors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityBase'
+    post:
+      tags:
+        - Entrenador
+      summary: Crear Entrenador
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '201':
+          description: Entrenador creado
+
+  /entrenador/{id}:
+    get:
+      tags:
+        - Entrenador
+      summary: Obtener Entrenador por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Entrenador encontrado
+        '404':
+          description: Entrenador no encontrado
+    patch:
+      tags:
+        - Entrenador
+      summary: Actualizar Entrenador
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '200':
+          description: Entrenador actualizado
+    delete:
+      tags:
+        - Entrenador
+      summary: Eliminar Entrenador
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Entrenador eliminado
+
+  /entrenador/{id}/upload-image:
+    post:
+      tags:
+        - Entrenador
+      summary: Subir imagen a Entrenador
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagen subida
+
+  /plan-entrenamiento:
+    get:
+      tags:
+        - PlanEntrenamiento
+      summary: Listar todos los PlanEntrenamientos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de PlanEntrenamientos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityBase'
+    post:
+      tags:
+        - PlanEntrenamiento
+      summary: Crear PlanEntrenamiento
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '201':
+          description: PlanEntrenamiento creado
+
+  /plan-entrenamiento/{id}:
+    get:
+      tags:
+        - PlanEntrenamiento
+      summary: Obtener PlanEntrenamiento por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PlanEntrenamiento encontrado
+        '404':
+          description: PlanEntrenamiento no encontrado
+    patch:
+      tags:
+        - PlanEntrenamiento
+      summary: Actualizar PlanEntrenamiento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '200':
+          description: PlanEntrenamiento actualizado
+    delete:
+      tags:
+        - PlanEntrenamiento
+      summary: Eliminar PlanEntrenamiento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PlanEntrenamiento eliminado
+
+  /plan-entrenamiento/{id}/upload-image:
+    post:
+      tags:
+        - PlanEntrenamiento
+      summary: Subir imagen a PlanEntrenamiento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagen subida
+
+  /plan-nutricional:
+    get:
+      tags:
+        - PlanNutricional
+      summary: Listar todos los PlanNutricionals
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de PlanNutricionals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityBase'
+    post:
+      tags:
+        - PlanNutricional
+      summary: Crear PlanNutricional
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '201':
+          description: PlanNutricional creado
+
+  /plan-nutricional/{id}:
+    get:
+      tags:
+        - PlanNutricional
+      summary: Obtener PlanNutricional por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PlanNutricional encontrado
+        '404':
+          description: PlanNutricional no encontrado
+    patch:
+      tags:
+        - PlanNutricional
+      summary: Actualizar PlanNutricional
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '200':
+          description: PlanNutricional actualizado
+    delete:
+      tags:
+        - PlanNutricional
+      summary: Eliminar PlanNutricional
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PlanNutricional eliminado
+
+  /plan-nutricional/{id}/upload-image:
+    post:
+      tags:
+        - PlanNutricional
+      summary: Subir imagen a PlanNutricional
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagen subida
+
+  /progreso:
+    get:
+      tags:
+        - Progreso
+      summary: Listar todos los Progresos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de Progresos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityBase'
+    post:
+      tags:
+        - Progreso
+      summary: Crear Progreso
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '201':
+          description: Progreso creado
+
+  /progreso/{id}:
+    get:
+      tags:
+        - Progreso
+      summary: Obtener Progreso por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Progreso encontrado
+        '404':
+          description: Progreso no encontrado
+    patch:
+      tags:
+        - Progreso
+      summary: Actualizar Progreso
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+      responses:
+        '200':
+          description: Progreso actualizado
+    delete:
+      tags:
+        - Progreso
+      summary: Eliminar Progreso
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Progreso eliminado
+
+  /progreso/{id}/upload-image:
+    post:
+      tags:
+        - Progreso
+      summary: Subir imagen a Progreso
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagen subida
