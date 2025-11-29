@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreatePlanEntrenamientoDto } from './dto/create-planentrenamiento.dto';
 import { UpdatePlanEntrenamientoDto } from './dto/update-planentrenamiento.dto';
 import { PlanEntrenamiento, PlanEntrenamientoDocument } from './schemas/planentrenamiento.schema';
@@ -44,5 +44,21 @@ export class PlanEntrenamientoService {
     if (!result) {
       throw new NotFoundException(`PlanEntrenamiento con ID ${id} no encontrado`);
     }
+  }
+
+  async findByUsuario(usuarioId: string): Promise<PlanEntrenamiento[]> {
+    const planes = await this.planentrenamientoModel
+      .find({ usuario: new Types.ObjectId(usuarioId) })
+      .populate('entrenador', 'nombre especialidad certificaciones')
+      .sort({ fechaCreacion: -1 });
+    return planes;
+  }
+
+  async findByNivel(nivel: string): Promise<PlanEntrenamiento[]> {
+    const planes = await this.planentrenamientoModel
+      .find({ nivel: { $regex: nivel, $options: 'i' } })
+      .populate('entrenador', 'nombre especialidad certificaciones')
+      .sort({ fechaCreacion: -1 });
+    return planes;
   }
 }

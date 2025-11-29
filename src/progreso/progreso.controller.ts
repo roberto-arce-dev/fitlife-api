@@ -102,6 +102,56 @@ export class ProgresoController {
     return { success: true, data, total: data.length };
   }
 
+  @Get('usuario/:usuarioId')
+  @ApiOperation({ summary: 'Obtener historial de progreso por usuario' })
+  @ApiParam({ name: 'usuarioId', description: 'ID del usuario' })
+  @ApiResponse({ status: 200, description: 'Historial de progreso del usuario' })
+  async findByUsuario(@Param('usuarioId') usuarioId: string) {
+    const data = await this.progresoService.findByUsuario(usuarioId);
+    return { success: true, data, total: data.length };
+  }
+
+  @Get('usuario/:usuarioId/evolucion')
+  @ApiOperation({ summary: 'Obtener evolución del usuario' })
+  @ApiParam({ name: 'usuarioId', description: 'ID del usuario' })
+  @ApiResponse({ status: 200, description: 'Datos de evolución del usuario' })
+  async getEvolucion(@Param('usuarioId') usuarioId: string) {
+    const data = await this.progresoService.getEvolucion(usuarioId);
+    return { success: true, data };
+  }
+
+  @Post('registrar')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Registrar nuevo progreso' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        usuarioId: { type: 'string', description: 'ID del usuario' },
+        tipo: { type: 'string', description: 'Tipo de progreso (peso, reps, tiempo)' },
+        valor: { type: 'number', description: 'Valor del progreso' },
+        unidad: { type: 'string', description: 'Unidad de medida' },
+        planId: { type: 'string', description: 'ID del plan asociado' }
+      },
+      required: ['usuarioId', 'tipo', 'valor']
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Progreso registrado exitosamente' })
+  async registrarProgreso(@Body() progresoDto: {
+    usuarioId: string;
+    tipo: string;
+    valor: number;
+    unidad?: string;
+    planId?: string;
+  }) {
+    const data = await this.progresoService.registrarProgreso(progresoDto);
+    return {
+      success: true,
+      message: 'Progreso registrado exitosamente',
+      data,
+    };
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener Progreso por ID' })
   @ApiParam({ name: 'id', description: 'ID del Progreso' })

@@ -95,10 +95,28 @@ export class PlanEntrenamientoController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Listar todos los PlanEntrenamientos' })
-  @ApiResponse({ status: 200, description: 'Lista de PlanEntrenamientos' })
+  @ApiOperation({ summary: 'Listar todos los Planentrenaimientos' })
+  @ApiResponse({ status: 200, description: 'Lista de Planentrenaimientos' })
   async findAll() {
     const data = await this.planentrenamientoService.findAll();
+    return { success: true, data, total: data.length };
+  }
+
+  @Get('usuario/:usuarioId')
+  @ApiOperation({ summary: 'Obtener planes de entrenamiento por usuario' })
+  @ApiParam({ name: 'usuarioId', description: 'ID del usuario' })
+  @ApiResponse({ status: 200, description: 'Lista de planes del usuario' })
+  async findByUsuario(@Param('usuarioId') usuarioId: string) {
+    const data = await this.planentrenamientoService.findByUsuario(usuarioId);
+    return { success: true, data, total: data.length };
+  }
+
+  @Get('nivel/:nivel')
+  @ApiOperation({ summary: 'Filtrar planes por nivel de dificultad' })
+  @ApiParam({ name: 'nivel', description: 'Nivel de dificultad' })
+  @ApiResponse({ status: 200, description: 'Lista de planes por nivel' })
+  async findByNivel(@Param('nivel') nivel: string) {
+    const data = await this.planentrenamientoService.findByNivel(nivel);
     return { success: true, data, total: data.length };
   }
 

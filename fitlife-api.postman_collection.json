@@ -587,6 +587,130 @@
           }
         }
       ]
+    },
+    {
+      "name": "Plan Entrenamiento",
+      "item": [
+        {
+          "name": "Mis Planes de Entrenamiento",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/planentrenamiento/usuario/{{usuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "planentrenamiento",
+                "usuario",
+                "{{usuarioId}}"
+              ]
+            },
+            "description": "Obtener planes asignados al usuario"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Plan Entrenamiento"
+    },
+    {
+      "name": "Progreso",
+      "item": [
+        {
+          "name": "Mi Progreso",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/progreso/usuario/{{usuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "progreso",
+                "usuario",
+                "{{usuarioId}}"
+              ]
+            },
+            "description": "Obtener historial de progreso del usuario"
+          },
+          "response": []
+        },
+        {
+          "name": "Mi Evolución",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/progreso/usuario/{{usuarioId}}/evolucion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "progreso",
+                "usuario",
+                "{{usuarioId}}",
+                "evolucion"
+              ]
+            },
+            "description": "Obtener datos de evolución y estadísticas"
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Progreso",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/progreso/registrar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "progreso",
+                "registrar"
+              ]
+            },
+            "description": "Registrar nuevo progreso del usuario",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": \"{{usuarioId}}\",\n  \"tipo\": \"peso\",\n  \"valor\": 75.5,\n  \"unidad\": \"kg\"\n}"
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Progreso"
     }
   ],
   "variable": [
