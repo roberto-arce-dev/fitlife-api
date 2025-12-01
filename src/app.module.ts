@@ -10,6 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { UsuarioProfileModule } from './usuario-profile/usuario-profile.module';
 import { EntrenadorProfileModule } from './entrenador-profile/entrenador-profile.module';
+import { PlanEntrenamientoModule } from './planentrenamiento/planentrenamiento.module';
+import { PlanNutricionalModule } from './plannutricional/plannutricional.module';
+import { ProgresoModule } from './progreso/progreso.module';
 
 @Module({
   imports: [
@@ -43,6 +46,9 @@ import { EntrenadorProfileModule } from './entrenador-profile/entrenador-profile
     UsuarioProfileModule,
     EntrenadorProfileModule,
     UploadModule,
+    PlanEntrenamientoModule,
+    PlanNutricionalModule,
+    ProgresoModule,
   ],
   controllers: [AppController],
   providers: [
