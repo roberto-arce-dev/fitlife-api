@@ -437,7 +437,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Nombre Actualizado\",\n  \"telefono\": \"+51 987654321\"\n}"
+              "raw": "{\n  \"nombre\": \"Valor de nombre\",\n  \"telefono\": \"+51 900000000\",\n  \"edad\": 1,\n  \"peso\": 1,\n  \"altura\": 1,\n  \"objetivos\": [\n    \"valor1\",\n    \"valor2\"\n  ]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/usuario-profile/me",
@@ -529,7 +529,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Nombre Actualizado\",\n  \"telefono\": \"+51 987654321\"\n}"
+              "raw": "{\n  \"nombreCompleto\": \"Valor de nombreCompleto\",\n  \"telefono\": \"+51 900000000\",\n  \"especialidad\": \"Valor de especialidad\",\n  \"certificaciones\": [\n    \"valor1\",\n    \"valor2\"\n  ],\n  \"experiencia\": \"Valor de experiencia\",\n  \"isVerified\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/entrenador-profile/me",
@@ -717,6 +717,26 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:3003/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "filename",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "usuarioId",
+      "value": "",
       "type": "string"
     }
   ]
