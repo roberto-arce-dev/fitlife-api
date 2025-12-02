@@ -8,8 +8,23 @@ export class Progreso {
   @Prop({ type: Types.ObjectId, ref: 'Usuario', required: true })
   usuario: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'PlanEntrenamiento' })
+  planEntrenamiento?: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'PlanNutricional' })
+  planNutricional?: Types.ObjectId;
+
   @Prop({ default: Date.now })
   fecha?: Date;
+
+  @Prop()
+  tipo?: string;
+
+  @Prop()
+  unidad?: string;
+
+  @Prop({ min: 0 })
+  valor?: number;
 
   @Prop({ min: 0 })
   peso?: number;
@@ -34,3 +49,4 @@ export class Progreso {
 export const ProgresoSchema = SchemaFactory.createForClass(Progreso);
 
 ProgresoSchema.index({ usuario: 1, fecha: -1 });
+ProgresoSchema.index({ planEntrenamiento: 1, usuario: 1 });

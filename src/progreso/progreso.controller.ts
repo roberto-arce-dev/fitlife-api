@@ -17,6 +17,7 @@ import { ProgresoService } from './progreso.service';
 import { CreateProgresoDto } from './dto/create-progreso.dto';
 import { UpdateProgresoDto } from './dto/update-progreso.dto';
 import { UploadService } from '../upload/upload.service';
+import { RegistrarProgresoDto } from './dto/registrar-progreso.dto';
 
 @ApiTags('Progreso')
 @ApiBearerAuth('JWT-auth')
@@ -123,27 +124,9 @@ export class ProgresoController {
   @Post('registrar')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Registrar nuevo progreso' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        usuarioId: { type: 'string', description: 'ID del usuario' },
-        tipo: { type: 'string', description: 'Tipo de progreso (peso, reps, tiempo)' },
-        valor: { type: 'number', description: 'Valor del progreso' },
-        unidad: { type: 'string', description: 'Unidad de medida' },
-        planId: { type: 'string', description: 'ID del plan asociado' }
-      },
-      required: ['usuarioId', 'tipo', 'valor']
-    }
-  })
+  @ApiBody({ type: RegistrarProgresoDto })
   @ApiResponse({ status: 201, description: 'Progreso registrado exitosamente' })
-  async registrarProgreso(@Body() progresoDto: {
-    usuarioId: string;
-    tipo: string;
-    valor: number;
-    unidad?: string;
-    planId?: string;
-  }) {
+  async registrarProgreso(@Body() progresoDto: RegistrarProgresoDto) {
     const data = await this.progresoService.registrarProgreso(progresoDto);
     return {
       success: true,

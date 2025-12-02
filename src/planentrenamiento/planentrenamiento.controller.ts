@@ -130,6 +130,30 @@ export class PlanEntrenamientoController {
     return { success: true, data };
   }
 
+  @Patch(':id/asignar-usuario/:usuarioId')
+  @ApiOperation({ summary: 'Asignar plan de entrenamiento a un usuario' })
+  @ApiParam({ name: 'id', description: 'ID del PlanEntrenamiento' })
+  @ApiParam({ name: 'usuarioId', description: 'ID del usuario' })
+  async asignarUsuario(
+    @Param('id') id: string,
+    @Param('usuarioId') usuarioId: string,
+  ) {
+    const data = await this.planentrenamientoService.asignarUsuario(id, usuarioId);
+    return { success: true, message: 'Plan de entrenamiento asignado al usuario', data };
+  }
+
+  @Patch(':id/asignar-plan-nutricional/:planNutricionalId')
+  @ApiOperation({ summary: 'Asociar plan nutricional a un plan de entrenamiento' })
+  @ApiParam({ name: 'id', description: 'ID del PlanEntrenamiento' })
+  @ApiParam({ name: 'planNutricionalId', description: 'ID del PlanNutricional' })
+  async asignarPlanNutricional(
+    @Param('id') id: string,
+    @Param('planNutricionalId') planNutricionalId: string,
+  ) {
+    const data = await this.planentrenamientoService.asignarPlanNutricional(id, planNutricionalId);
+    return { success: true, message: 'Plan nutricional asociado al plan de entrenamiento', data };
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar PlanEntrenamiento' })
   @ApiParam({ name: 'id', description: 'ID del PlanEntrenamiento' })

@@ -14,6 +14,12 @@ export class PlanEntrenamiento {
   @Prop({ type: Types.ObjectId, ref: 'Entrenador', required: true })
   entrenador: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'Usuario' })
+  usuario?: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'PlanNutricional' })
+  planNutricional?: Types.ObjectId;
+
   @Prop({ default: 4 })
   duracionSemanas?: number;
 
@@ -35,3 +41,5 @@ export const PlanEntrenamientoSchema = SchemaFactory.createForClass(PlanEntrenam
 
 PlanEntrenamientoSchema.index({ entrenador: 1 });
 PlanEntrenamientoSchema.index({ nivel: 1 });
+PlanEntrenamientoSchema.index({ usuario: 1 });
+PlanEntrenamientoSchema.index({ planNutricional: 1 });
